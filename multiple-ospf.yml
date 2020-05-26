@@ -1,0 +1,36 @@
+---
+- name: Manage EVE-NG Devices
+  hosts: eve_ng_routers
+  gather_facts: false
+  connection: local
+
+  vars:
+    cli:
+      username: admin
+      password: cisco
+
+  tasks:
+    - name: Enable OSPF globally
+      ios_config:
+        provider: "{{ cli }}"
+        authorize: yes
+        parents: router ospf 1
+        lines: 
+          - network 0.0.0.0 0.0.0.0 area 0
+
+      register: print_output
+
+    - debug: var=print_output.stdout_lines
+
+    - name: Add network to OSPF 
+      ios_config:
+        provider: "{{ cli }}"
+        authorize: yes
+        parents: router ospf 1
+        lines: 
+          - network 2.2.2.0 0.0.0.255 area 0
+
+      register: print_output
+
+    - debug: var=print_output.stdout_lines
+    

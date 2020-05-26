@@ -1,0 +1,107 @@
+---
+- name: Configure Generic configuration to all cisco devices
+  hosts: eve_ios
+  gather_facts: false
+  connection: local
+
+  vars:
+    cli:
+      username: admin
+      password: cisco
+      #transport: cli
+
+  tasks:
+    - name: ADD SNMP COMMUNITY
+      ios_config:
+        provider: "{{ cli }}"
+        authorize: yes
+        lines: 
+          - snmp-server community SECRET rw
+          - snmp-server contact Melih TEKE
+          - snmp-server location AMSTERDAM
+          - snmp-server source-interface traps gigabitethernet 0/0 
+       
+      register: print_output
+
+    - debug: var=print_output
+
+- name: Configure Switches
+  hosts: switches
+  gather_facts: false
+  connection: local
+
+  vars:
+    cli:
+      username: admin
+      password: cisco
+      #transport: cli
+
+  tasks:
+    - name: ADD VLANs to Switches
+      ios_config:
+        provider: "{{ cli }}"
+        authorize: yes
+        lines: 
+          - vlan 30
+          - vlan 40
+          - vlan 50
+          - vlan 60
+          - vlan 70
+          - vlan 80
+          - vlan 90
+          - vlan 100
+          - vlan 200
+      register: print_output
+
+    - debug: var=print_output
+
+- name: Configure Router54 Loopback
+  hosts: Router54
+  gather_facts: false
+  connection: local
+
+  vars:
+    cli:
+      username: admin
+      password: cisco
+      #transport: cli
+
+  tasks:
+    - name: Configure Loopback100
+      ios_config:
+        provider: "{{ cli }}"
+        authorize: yes
+        parents: 
+          - interface Loopback 100
+        lines: 
+          - ip address 100.100.100.54 255.255.255.0
+
+      register: print_output
+
+    - debug: var=print_output
+
+- name: Configure Router55 Loopback
+  hosts: Router55
+  gather_facts: false
+  connection: local
+
+  vars:
+    cli:
+      username: admin
+      password: cisco
+      #transport: cli
+
+  tasks:
+    - name: Configure Loopback100
+      ios_config:
+        provider: "{{ cli }}"
+        authorize: yes
+        parents: 
+          - interface Loopback 100
+        lines: 
+          - ip address 100.100.100.55 255.255.255.0
+
+      register: print_output
+
+    - debug: var=print_output
+

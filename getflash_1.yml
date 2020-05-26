@@ -1,0 +1,13 @@
+---
+- name: GET ARP information
+  hosts: all
+  gather_facts: false
+
+  tasks:
+    - name: show arp
+      raw: "show flash:"
+
+      register: print_output
+
+    - debug: var=print_output.stdout_lines
+
